@@ -11,6 +11,8 @@ import Signin from './Signin';
 import Login from './Login';
 import './App.css';
 
+import Airplanes from './Airplanes';
+
 class App extends Component {
   render() {
     return (
@@ -29,6 +31,9 @@ class App extends Component {
                   </li>
                   <li className="nav-item">
                     <Link to="/about" className="nav-link">About Us</Link>
+                  </li>                  
+                  <li className="nav-item">
+                    <Link to="/airplanes" className="nav-link">Airplanes</Link>
                   </li>
                   <li className="nav-item">
                     <Link to=" " className="nav-link">Back</Link>
@@ -43,11 +48,11 @@ class App extends Component {
                  <Route exact path='/about' element={< About />}></Route>
                  <Route exact path='/login' element={< Login />}></Route>
                  <Route exact path='/signin' element={< Signin />}></Route>
+                 <Route exact path='/airplanes' element={< Airplanes />}></Route>
           </Routes>    
       </Router>
    );
   }
 }
-
 
 export default App;
