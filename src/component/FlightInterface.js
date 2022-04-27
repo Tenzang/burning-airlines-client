@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+const SERVER_URL = 'http://localhost:3000/.json'; // Later: change this to the "deployed" URL
+
 class FlightInterface extends Component {
     constructor() {
         super();
@@ -25,8 +27,12 @@ class FlightInterface extends Component {
 class FlightForm extends Component {
     constructor() {
         super();
-        this.state = {number: '',  };
+        this.state = {number: '', date: '', destination: '', origin: '', airplane_id: ''   };
         this._handleFlightNum = this._handleFlightNum.bind(this);
+        this._handleFlightDate = this._handleFlightDate.bind(this);
+        this._handleFlightTo = this._handleFlightTo.bind(this);
+        this._handleFlightFrom = this._handleFlightFrom.bind(this);
+        this._handleFlightPlane = this._handleFlightPlane.bind(this);
         this._handleSubmit = this._handleSubmit.bind(this);
     }
 
@@ -47,14 +53,13 @@ class FlightForm extends Component {
         this.setState({origin: event.target.value});
     }
 
-    _handleFlightPlane(evnet) {
-        this.setState({airplane_id: event.target,value})
+    _handleFlightPlane(event) {
+        this.setState({airplane_id: event.target.value})
     }
 
     _handleSubmit(event) {
         event.preventDefault();
-        this.props.onSubmit(this.state.content)
-        this.setState({ content: '' })
+        axios.post(SERVER_URL, this.state).then(response => console.log(response));
     }
     render() {
         return (
@@ -78,7 +83,7 @@ class FlightForm extends Component {
                     </label>
                     <label>
                         Plane:
-                        <input onChange={ this_handleFlightPlane} /> 
+                        <input onChange={ this._handleFlightPlane} /> 
                         {/* turn into a select input later on  */}
                     </label>
                 </form>

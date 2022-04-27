@@ -8,6 +8,11 @@ import {
 import Home from './Home';
 import About from './About';
 import FlightInterface from "./FlightInterface";
+import Signin from './Signin';
+import Login from './Login';
+import './App.css';
+
+import Airplanes from './Airplanes';
 
 class App extends Component {
   render() {
@@ -32,6 +37,11 @@ class App extends Component {
                     <Link to="/FlightInterface" className="nav-link">Flight Information</Link>
                   </li>
                   <li className="nav-item">
+                  </li>                  
+                  <li className="nav-item">
+                    <Link to="/airplanes" className="nav-link">Airplanes</Link>
+                  </li>
+                  <li className="nav-item">
                     <Link to=" " className="nav-link">Back</Link>
                   </li>
                 </ul>
@@ -43,11 +53,13 @@ class App extends Component {
                  <Route exact path='/home' element={< Home />}></Route>
                  <Route exact path='/about' element={< About />}></Route>
                  <Route exact path='/FlightInterface' element={< FlightInterface />}></Route>
+                 <Route exact path='/login' element={< Login />}></Route>
+                 <Route exact path='/signin' element={< Signin />}></Route>
+                 <Route exact path='/airplanes' element={< Airplanes />}></Route>
           </Routes>    
       </Router>
    );
   }
 }
-
 
 export default App;
