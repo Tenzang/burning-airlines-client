@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-const SERVER_URL = 'http://localhost:3000/.json'; // Later: change this to the "deployed" URL
+const SERVER_URL = 'http://localhost:3000/flights.json'; // Later: change this to the "deployed" URL
 
 class FlightInterface extends Component {
     constructor() {
         super();
-        this.state = {
-            flightInformation: []
+        this.state = { 
         };
 
     
@@ -45,12 +44,12 @@ class FlightForm extends Component {
         this.setState({date: event.target.value});
     }
 
-    _handleFlightTo(event) {
-        this.setState({destination: event.target.value});
-    }
-
     _handleFlightFrom(event) {
         this.setState({origin: event.target.value});
+    }
+
+    _handleFlightTo(event) {
+        this.setState({destination: event.target.value});
     }
 
     _handleFlightPlane(event) {
@@ -58,6 +57,7 @@ class FlightForm extends Component {
     }
 
     _handleSubmit(event) {
+        console.log('Submitting');
         event.preventDefault();
         axios.post(SERVER_URL, this.state).then(response => console.log(response));
     }
@@ -86,12 +86,14 @@ class FlightForm extends Component {
                         <input onChange={ this._handleFlightPlane} /> 
                         {/* turn into a select input later on  */}
                     </label>
+                    <input type="submit" value="Create Flight" />
                 </form>
-                <input type="submit" value="Create Flight" />
+
+                
             </div>
         );
     }
-}
+};
 
 
 
