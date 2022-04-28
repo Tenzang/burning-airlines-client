@@ -1,63 +1,53 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import AirplaneForm from './AirplaneForm';
+import AirplaneList from './AirplaneList';
+
 const SERVER_URL = 'http://localhost:3000/airplanes.json'; // Later: change this to the "deployed" URL
 
 class Airplanes extends Component {
     constructor() {
         super();
-        this.state = {
-            name: '',
-            row: '',
-            col: ''
-        }
+        this.state = {airplanes: []}
 
-        this._handleNameChange = this._handleNameChange.bind(this);
-        this._handleRowChange = this._handleRowChange.bind(this);
-        this._handleColChange = this._handleColChange.bind(this);
-
-        this._handleSubmit = this._handleSubmit.bind(this);
+        this.saveAirplane = this.saveAirplane.bind(this);
 
     }
 
-    _handleNameChange(event) {
-        this.setState({name: event.target.value});
-    }
+    componentDidMount() {
+        const fetchAirplanes = () => {
+            axios(SERVER_URL).then(response => {
+                const mappedResponse = ("response data mapped: ", response.data.map(airplane => {
+                        return(
+                            {name: airplane.name,
+                                row: airplane.row, 
+                                col: airplane.col}
+                                )
+                            }));
+                this.setState({airplanes: mappedResponse});
 
-    _handleRowChange(event) {
-        this.setState({row: event.target.value});
-    }
+                setTimeout(fetchAirplanes, 5000); // a form of recursion // POLLING
+            });
+        };
 
-    _handleColChange(event) {
-        this.setState({col: event.target.value});
-    }
+        fetchAirplanes();
+    };
 
-    _handleSubmit(event) {
-        event.preventDefault();
-        axios.post(SERVER_URL, this.state).then(response => console.log(response));
+    saveAirplane(state) {
+        axios.post(SERVER_URL, state).then(response => {
+            this.setState({airplanes: [response.data, ...this.state.airplanes]})
+        });
     }
 
     render() {
         return(
             <div>
-                <h2>Burning Airlines</h2>
-                <form onSubmit={ this._handleSubmit }>
-                    <label>
-                        Name:
-                        <input onChange={ this._handleNameChange } />
-                    </label>
-                    <label>
-                        Rows:
-                        <input onChange={ this._handleRowChange } />
-                    </label>
-                    <label>
-                        Cols:
-                        <input onChange={ this._handleColChange } />
-                    </label>
-                    <input type="submit" value="save" />
-                </form>
+                <AirplaneForm onSubmit={ this.saveAirplane } />
+                <AirplaneList airplanes = { this.state } />
             </div>
         );
+
     }
 }
 
