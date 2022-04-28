@@ -10,8 +10,11 @@ class Signin extends Component{
             email:"",
             password:"",
             password_confirmation:"",
+            name: "",
+            admin: "0",
         }
         this._handleInputEmail=this._handleInputEmail.bind(this);
+        this._handleInputName=this._handleInputName.bind(this);
         this._handleInputPassword=this._handleInputPassword.bind(this);
         this._handleInputPasswordConfir=this._handleInputPasswordConfir.bind(this);
         this._handleSubmit = this._handleSubmit.bind(this);
@@ -20,6 +23,11 @@ class Signin extends Component{
     
     _handleInputEmail(event){
         this.setState({email: event.target.value});
+        console.log(event.target.value);
+    };
+
+    _handleInputName(event){
+        this.setState({name: event.target.value});
         console.log(event.target.value);
     };
 
@@ -35,12 +43,32 @@ class Signin extends Component{
 
     _handleSubmit(event){
         event.preventDefault();
-        axios.post(SERVER_URL, this.state).then((response) => {
-            console.log(response);
-
-            
-        });
-
+        const {
+            email,
+            password,
+            password_confirmation,
+            name
+          } = this.state;
+          axios
+            .post(
+                SERVER_URL,
+              {
+                user: {
+                  email: email,
+                  password: password,
+                  password_confirmation: password_confirmation,
+                  name: name,
+                }
+              }
+            )
+            .then(response => {
+                if (response.data.status === "created") {
+                  console.log("Registration data", response.data)
+                }
+              })
+              .catch(error => {
+                console.log("registration error", error);
+              });
     }
 
 
@@ -52,6 +80,10 @@ class Signin extends Component{
                 <div className="mb-3">
                    <label className="form-label">Email address</label>
                    <input type="email" className="form-control" id="exampleFormControlInput1" required onChange={this._handleInputEmail}/>
+                </div>
+                <div className="mb-3">
+                   <label className="form-label">User name:</label>
+                   <input className="form-control" id="exampleFormControlInput1" required onChange={this._handleInputName}/>
                 </div>
                 <div className="mb-3">
                    <label className="form-label">Password:</label>

@@ -1,99 +1,60 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-const SERVER_URL = 'http://localhost:3000/.json'; // Later: change this to the "deployed" URL
+import FlightForm from './FlightForm';
+import FlightList from './FlightList';
+
+const SERVER_URL = 'http://localhost:3000/flights.json'; // Later: change this to the "deployed" URL
 
 class FlightInterface extends Component {
     constructor() {
         super();
-        this.state = {
-            flightInformation: []
+        this.state = {flights: [] }
+
+        this.saveFlight = this.saveFlight.bind(this);
+        
+        }
+    
+        componentDidMount() {
+            const fetchFlights = () => {
+                axios(SERVER_URL).then(response => {
+                    const mappedResponse = ("response data mapped: ", response.data.map(flight => {
+                            return(
+                                {number: flight.number,
+                                    date: flight.date, 
+                                    from: flight.origin ,
+                                    to:   flight.destination,
+                                    plane: flight.airplane_id } 
+                                    )
+                                }));
+                    this.setState({flights: mappedResponse});
+    
+                    setTimeout(fetchFlights, 5000); // a form of recursion // POLLING
+                });
+            };
+            fetchFlights();
         };
 
-    
-    }
+        saveFlight(state) {
+            axios.post(SERVER_URL, state).then(response => {
+                this.setState({flights: [response.data, ...this.state.flights]})
+            });
+        }   
+
     render() {
         return (
             <div>
                 <h1>Flight Interface</h1>
-                <FlightForm /> 
-                {/* //onSubmit={ this.saveFlight} /> */}
-                
+                <FlightForm onSubmit={ this.saveFlight }/>
+                <FlightList flights={ this.state } />
+                            
             </div>
         );
     }
-}
-
-class FlightForm extends Component {
-    constructor() {
-        super();
-        this.state = {number: '', date: '', destination: '', origin: '', airplane_id: ''   };
-        this._handleFlightNum = this._handleFlightNum.bind(this);
-        this._handleFlightDate = this._handleFlightDate.bind(this);
-        this._handleFlightTo = this._handleFlightTo.bind(this);
-        this._handleFlightFrom = this._handleFlightFrom.bind(this);
-        this._handleFlightPlane = this._handleFlightPlane.bind(this);
-        this._handleSubmit = this._handleSubmit.bind(this);
-    }
-
-    _handleFlightNum(event) {
-        this.setState({number: event.target.value});
-
-    }
-
-    _handleFlightDate(event) {
-        this.setState({date: event.target.value});
-    }
-
-    _handleFlightTo(event) {
-        this.setState({destination: event.target.value});
-    }
-
-    _handleFlightFrom(event) {
-        this.setState({origin: event.target.value});
-    }
-
-    _handleFlightPlane(event) {
-        this.setState({airplane_id: event.target.value})
-    }
-
-    _handleSubmit(event) {
-        event.preventDefault();
-        axios.post(SERVER_URL, this.state).then(response => console.log(response));
-    }
-    render() {
-        return (
-            <div>
-                <form onSubmit={ this._handleSubmit }>
-                    <label>
-                        Flight#:
-                        <input onChange={ this._handleFlightNum } />
-                    </label>
-                    <label>
-                        Date:
-                        <input type="date" onChange={ this._handleFlightDate } />
-                    </label>
-                    <label>
-                        To:
-                        <input onChange={ this._handleFlightTo } />
-                    </label>
-                    <label>
-                        From:
-                        <input onChange={ this._handleFlightFrom }  />
-                    </label>
-                    <label>
-                        Plane:
-                        <input onChange={ this._handleFlightPlane} /> 
-                        {/* turn into a select input later on  */}
-                    </label>
-                </form>
-                <input type="submit" value="Create Flight" />
-            </div>
-        );
-    }
-}
-
-
+};
 
 
 export default FlightInterface;
+
+
+
