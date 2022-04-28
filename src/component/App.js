@@ -12,7 +12,7 @@ import Signin from './Signin';
 import Login from './Login';
 import './App.css';
 
-import Airplanes from './Airplanes';
+import Airplanes from './Airplanes/Airplanes';
 
 class App extends Component {
   render() {
@@ -56,7 +56,7 @@ class App extends Component {
                  <Route exact path='/login' element={< Login />}></Route>
                  <Route exact path='/signin' element={< Signin />}></Route>
                  <Route exact path='/airplanes' element={< Airplanes />}></Route>
-          </Routes>    
+          </Routes>
       </Router>
    );
   }
